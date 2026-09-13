@@ -54,10 +54,10 @@ def build_project():
         "build/tests.o",
     )
     
-    #compiler.add_compilation_unit(
-    #    "application/ImageRGBA.cpp",
-    #    "build/ImageRGBA.o"
-    #)
+    compiler.add_compilation_unit(
+        "application/ImageRGBA.cpp",
+        "build/ImageRGBA.o"
+    )
     
     compiler.run()
 
@@ -100,6 +100,7 @@ def build_project():
     application.add_object_file("build/engine.o")
     application.add_object_file("build/application.o")
     application.add_object_file("build/main.o")
+    application.add_object_file("build/ImageRGBA.o")
 
     application.add_static_library("build/my_lib.a")
 

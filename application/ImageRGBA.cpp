@@ -1,6 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #include "ImageRGBA.h"
 
 #include <string>
@@ -121,6 +124,8 @@ namespace ImageRGBA_
             image.data[index + 2] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>(static_cast<float>(rgba.b) * mixture_factor + static_cast<float>(image.data[index + 2]) * inverse_mixture_factor))));
             image.data[index + 3] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>(static_cast<float>(rgba.a) * mixture_factor + static_cast<float>(image.data[index + 3]) * inverse_mixture_factor))));
         }
+		
+		   return true;
     }
 
     RGBA get_pixel(const ImageRGBA& image, int x, int y)
