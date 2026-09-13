@@ -2,6 +2,7 @@
 #include "engine.h"
 
 #include <iostream>
+#include <cmath>
 
 #include "ImageRGBA.h"
 
@@ -16,6 +17,51 @@ void draw_rectangle(ImageRGBA& image, int x_min, int y_min, int x_max, int y_max
 			ImageRGBA_::set_pixel(image, x, y, color);
 		}
 	}
+}
+
+
+void draw_line(ImageRGBA& image, int a_x, int a_y, int b_x, int b_y, RGBA color)
+{
+	int dx = a_x - b_x;
+	int dy = a_y - b_y;
+
+	int steps = std::max(abs(dx), abs(dy));
+
+	// int width = ImageRGBA_::get_width();
+	// int height = ImageRGBA_::get_height();
+
+
+	// A line whose start and end are the same point.
+	if (steps == 0)
+	{
+		ImageRGBA_::set_pixel(image, a_x, a_y, color);
+		return;
+	}
+
+	float x = float(a_x);
+	float y = float(a_y);
+
+	float step_x = float(dx) / float(steps);
+	float step_y = float(dy) / float(steps);
+
+
+	for (int i = 0; i < steps; ++i)
+	{
+		std::cout << "i : " << i << "\n";
+
+		ImageRGBA_::set_pixel
+		(
+			image,
+			int(std::round(x)),
+			int(std::round(y)),
+			color
+		);
+
+		x += step_x;
+		y += step_y;
+	}
+
+	
 }
 
 int run_application()
@@ -61,6 +107,17 @@ int run_application()
 	}
 	
 	draw_rectangle(*image, 10, 110, 200, 400, RGBA(100, 200, 255, 255));
+	
+	{
+		RGBA color;
+		color.r = 100;
+		color.b = 120;
+		color.b = 220;
+		color.a = 255;
+
+		draw_line(*image, 100, 100, 220, 1000, color);
+	}
+
 	
 	ImageRGBA_::save_png(*image, "output.png");
 
