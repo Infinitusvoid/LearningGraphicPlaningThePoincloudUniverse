@@ -2,6 +2,8 @@
 
 import build_api
 
+
+
 def build_project():
     # ------------------------------------------------------------------
     # Where this project lives
@@ -52,11 +54,20 @@ def build_project():
 
     compiler.run()
 
-
+    # Notes
     # .cpp = human-readable source code
     # .o = previously compiled binary object code
     # .a = binary archive containing one or more .o files ( think .lib on windows)
     # .exe = final linked executable
+
+    # No — compiler.add_include_directory() does not compile everything inside that directory.
+    # “When you see an #include, also search in this folder for the header.”
+
+    # ------------------------------------------------------------------
+    # add stb header lib
+    compiler.add_include_directory("third_party/stb")
+    
+    # ------------------------------------------------------------------
 
     # ------------------------------------------------------------------
     # Create one explicit static library file
