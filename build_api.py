@@ -201,3 +201,6 @@ def run_program(
         raise BuildError(f"Executable does not exist: {executable_file}")
 
     _run([str(executable)], working_directory)
+
+def get_file_directory(file):
+    return Path(file).resolve().parent

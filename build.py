@@ -1,17 +1,13 @@
-from pathlib import Path
+#from pathlib import Path
 
 import build_api
-
-
-def get_project_directory():
-    return Path(__file__).resolve().parent
 
 def build_project():
     # ------------------------------------------------------------------
     # Where this project lives
     # ------------------------------------------------------------------
 
-    project_directory = get_project_directory()
+    project_directory = build_api.get_file_directory(__file__)
     
     # ------------------------------------------------------------------
     # Folders that must exist
@@ -19,7 +15,7 @@ def build_project():
 
     build_api.create_directory_if_missing(project_directory / "application")
     build_api.create_directory_if_missing(project_directory / "build")
-    build_api.create_directory_if_missing(project_directory / "wuwu")
+    build_api.create_directory_if_missing(project_directory / "third_party")
 
     # ------------------------------------------------------------------
     # Compile every C++ source file into an explicit object file
@@ -56,6 +52,11 @@ def build_project():
 
     compiler.run()
 
+
+    # .cpp = human-readable source code
+    # .o = previously compiled binary object code
+    # .a = binary archive containing one or more .o files ( think .lib on windows)
+    # .exe = final linked executable
 
     # ------------------------------------------------------------------
     # Create one explicit static library file
