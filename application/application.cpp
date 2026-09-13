@@ -65,6 +65,11 @@ int run_application()
 	ImageRGBA_::save_png(*image, "output.png");
 
     ImageRGBA_::free_image(image);
-
+	
+	
+	std::cout << "----------------------- \n";
+	std::cout << "Writing the image \n";
+	std::cout << "----------------------- \n";
+	
     return value == 42 ? 0 : 1;
 }
