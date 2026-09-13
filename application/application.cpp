@@ -148,29 +148,34 @@ void draw_line(ImageRGBA& image, int a_x, int a_y, int b_x, int b_y, RGBA color)
 {
 	// A line rasterizer can simply walk through continuous space in increments small enough that it never skips a pixel row or column.
 	
-	float clipped_a_x = float(a_x);
-	float clipped_a_y = float(a_y);
-
-	float clipped_b_x = float(b_x);
-	float clipped_b_y = float(b_y);
-
-	if (!clip_line_to_image(
-		image,
-		clipped_a_x,
-		clipped_a_y,
-		clipped_b_x,
-		clipped_b_y))
+	
+	float dx = 0;
+	float dy = 0;
+	
+	// clipping lines
 	{
-		return;
+		float clipped_a_x = float(a_x);
+		float clipped_a_y = float(a_y);
+
+		float clipped_b_x = float(b_x);
+		float clipped_b_y = float(b_y);
+
+		if (!clip_line_to_image(
+			image,
+			clipped_a_x,
+			clipped_a_y,
+			clipped_b_x,
+			clipped_b_y))
+		{
+			return;
+		}
+
+		dx = clipped_b_x - clipped_a_x;
+		dy = clipped_b_y - clipped_a_y;
 	}
-
-	float dx = clipped_b_x - clipped_a_x;
-	float dy = clipped_b_y - clipped_a_y;
-
-	int steps = std::max(std::abs(dx), std::abs(dy));
-
 	
 
+	int steps = std::max(std::abs(dx), std::abs(dy));
 
 	// A line whose start and end are the same point.
 	if (steps == 0)
@@ -187,9 +192,6 @@ void draw_line(ImageRGBA& image, int a_x, int a_y, int b_x, int b_y, RGBA color)
 
 	for (int i = 0; i < steps; i++)
 	{
-		std::cout << "x : " << x <<  " y : " << y << "\n";
-		
-
 		ImageRGBA_::set_pixel
 		(
 			image,
