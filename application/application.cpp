@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cassert>
 
+
 #include "ImageRGBA.h"
 
 
@@ -144,67 +145,102 @@ bool clip_line_to_image(
 	return true;
 }
 
-void draw_line(ImageRGBA& image, int a_x, int a_y, int b_x, int b_y, RGBA color)
+void draw_line(
+	ImageRGBA& image,
+	int a_x,
+	int a_y,
+	int b_x,
+	int b_y,
+	RGBA color)
 {
-	// A line rasterizer can simply walk through continuous space in increments small enough that it never skips a pixel row or column.
-	
-	
-	float dx = 0;
-	float dy = 0;
-	
-	// clipping lines
+	// Convert the original line to floating point because clipping
+	// may move either endpoint to a position between integer pixels.
+
+	float clipped_a_x = float(a_x);
+	float clipped_a_y = float(a_y);
+
+	float clipped_b_x = float(b_x);
+	float clipped_b_y = float(b_y);
+
+
+	// Find the part of the line that is actually inside the image.
+
+	if (!clip_line_to_image(
+		image,
+		clipped_a_x,
+		clipped_a_y,
+		clipped_b_x,
+		clipped_b_y))
 	{
-		float clipped_a_x = float(a_x);
-		float clipped_a_y = float(a_y);
-
-		float clipped_b_x = float(b_x);
-		float clipped_b_y = float(b_y);
-
-		if (!clip_line_to_image(
-			image,
-			clipped_a_x,
-			clipped_a_y,
-			clipped_b_x,
-			clipped_b_y))
-		{
-			return;
-		}
-
-		dx = clipped_b_x - clipped_a_x;
-		dy = clipped_b_y - clipped_a_y;
-	}
-	
-
-	int steps = std::max(std::abs(dx), std::abs(dy));
-
-	// A line whose start and end are the same point.
-	if (steps == 0)
-	{
-		ImageRGBA_::set_pixel(image, a_x, a_y, color);
 		return;
 	}
 
-	float x = float(a_x);
-	float y = float(a_y);
 
-	float step_x = float(dx) / float(steps);
-	float step_y = float(dy) / float(steps);
+	float dx = clipped_b_x - clipped_a_x;
+	float dy = clipped_b_y - clipped_a_y;
+
+
+	// Walk through continuous space in increments small enough
+	// that we never skip a pixel row or column.
+
+	int steps = int(std::ceil(
+		std::max(std::abs(dx), std::abs(dy))
+	));
+
+
+	// The visible line collapsed to one point.
+
+	if (steps == 0)
+	{
+		ImageRGBA_::set_pixel(
+			image,
+			int(std::round(clipped_a_x)),
+			int(std::round(clipped_a_y)),
+			color);
+
+		return;
+	}
+
+
+	float x = clipped_a_x;
+	float y = clipped_a_y;
+
+	float step_x = dx / float(steps);
+	float step_y = dy / float(steps);
+
 
 	for (int i = 0; i < steps; i++)
 	{
-		ImageRGBA_::set_pixel
-		(
+		ImageRGBA_::set_pixel(
 			image,
 			int(std::round(x)),
 			int(std::round(y)),
-			color
-		);
+			color);
 
 		x += step_x;
 		y += step_y;
 	}
 
-	ImageRGBA_::set_pixel(image, b_x, b_y, color);
+
+	// Explicitly draw the final visible endpoint.
+
+	ImageRGBA_::set_pixel(
+		image,
+		int(std::round(clipped_b_x)),
+		int(std::round(clipped_b_y)),
+		color);
+}
+
+void draw_triangle_wireframe(
+	ImageRGBA& image,
+	int a_x, int a_y,
+	int b_x, int b_y,
+	int c_x, int c_y,
+	RGBA color)
+{
+	draw_line(image, a_x, a_y, b_x, b_y, color);
+	draw_line(image, b_x, b_y, c_x, c_y, color);
+	draw_line(image, c_x, c_y, a_x, a_y, color);
 }
 
 int run_application()
@@ -242,7 +278,7 @@ int run_application()
 	{
 		RGBA color;
 		color.r = 100;
-		color.b = 120;
+		color.g = 120;
 		color.b = 220;
 		color.a = 255;
 		
@@ -259,6 +295,15 @@ int run_application()
 		color.a = 255;
 
 		draw_line(*image, 100, 100, 220, 1000, color);
+	}
+
+	{
+		draw_triangle_wireframe(
+			*image,
+			100, 100,
+			800, 250,
+			350, 850,
+			RGBA(255, 255, 255, 255));
 	}
 
 	
