@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "ImageRGBA.h"
+
 int run_application()
 {
     const int value = engine_calculate_example_value();

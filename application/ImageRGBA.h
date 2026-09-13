@@ -2,6 +2,7 @@
 
 
 #include <functional>
+#include <cstdint>
 
 struct RGBA
 {
