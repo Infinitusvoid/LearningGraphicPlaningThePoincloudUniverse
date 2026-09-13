@@ -5,6 +5,19 @@
 
 #include "ImageRGBA.h"
 
+
+
+void draw_rectangle(ImageRGBA& image, int x_min, int y_min, int x_max, int y_max, RGBA color)
+{
+	for(int y = y_min; y <= y_max; y++)
+	{
+		for(int x = x_min; x <= x_max; x++)
+		{
+			ImageRGBA_::set_pixel(image, x, y, color);
+		}
+	}
+}
+
 int run_application()
 {
     const int value = engine_calculate_example_value();
@@ -47,6 +60,7 @@ int run_application()
 		ImageRGBA_::set_pixel(*image, i, i, color);
 	}
 	
+	draw_rectangle(*image, 10, 110, 200, 400, RGBA(100, 200, 255, 255));
 	
 	ImageRGBA_::save_png(*image, "output.png");
 
