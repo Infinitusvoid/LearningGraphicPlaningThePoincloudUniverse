@@ -6,15 +6,17 @@
 
 #include "ImageRGBA.h"
 
-#include <string>
-#include <iostream>
-
+#include <algorithm>
+#include <cmath>
 #include <cstdlib>
+#include <iostream>
+#include <string>
 
 struct ImageRGBA
 {
-    int width, height;
-    unsigned char* data;
+    int width = 0;
+    int height = 0;
+    unsigned char* data = nullptr;
 };
 
 namespace ImageRGBA_
@@ -24,7 +26,13 @@ namespace ImageRGBA_
         ImageRGBA* image = new ImageRGBA();
         image->width = width;
         image->height = height;
-        image->data = (unsigned char*)malloc(width * height * 4 * sizeof(unsigned char));
+        image->data = static_cast<unsigned char*>(malloc(width * height * 4 * sizeof(unsigned char)));
+
+        if (!image->data)
+        {
+            delete image;
+            return nullptr;
+        }
 
         clear_with_color(*image, { 0, 0, 0, 255 });
 
@@ -34,9 +42,6 @@ namespace ImageRGBA_
     ImageRGBA* load(const char* filename)
     {
         ImageRGBA* image = new ImageRGBA();
-        image->width = 0;
-        image->height = 0;
-        free(image->data);
 
         int channels = 0;
 
@@ -44,6 +49,7 @@ namespace ImageRGBA_
 
         if (!image->data)
         {
+            delete image;
             return nullptr;
         }
 
@@ -52,10 +58,18 @@ namespace ImageRGBA_
 
     void free_image(ImageRGBA* image)
     {
+        if (!image)
+        {
+            return;
+        }
+
         if (image->data)
         {
             stbi_image_free(image->data);
+            image->data = nullptr;
         }
+
+        delete image;
     }
 
     int get_width(const ImageRGBA& image)
@@ -118,14 +132,14 @@ namespace ImageRGBA_
 
         {
             int index = (y * image.width + x) * 4;
-            float inverse_mixture_factor = 1.0 - mixture_factor;
-            image.data[index + 0] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>( static_cast<float>(rgba.r) * mixture_factor + static_cast<float>(image.data[index + 0]) * inverse_mixture_factor))));
-            image.data[index + 1] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>( static_cast<float>(rgba.g) * mixture_factor + static_cast<float>(image.data[index + 1]) * inverse_mixture_factor))));
+            float inverse_mixture_factor = 1.0f - mixture_factor;
+            image.data[index + 0] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>(static_cast<float>(rgba.r) * mixture_factor + static_cast<float>(image.data[index + 0]) * inverse_mixture_factor))));
+            image.data[index + 1] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>(static_cast<float>(rgba.g) * mixture_factor + static_cast<float>(image.data[index + 1]) * inverse_mixture_factor))));
             image.data[index + 2] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>(static_cast<float>(rgba.b) * mixture_factor + static_cast<float>(image.data[index + 2]) * inverse_mixture_factor))));
             image.data[index + 3] = static_cast<unsigned char>(std::min(255, std::max(0, static_cast<int>(static_cast<float>(rgba.a) * mixture_factor + static_cast<float>(image.data[index + 3]) * inverse_mixture_factor))));
         }
-		
-		   return true;
+
+        return true;
     }
 
     RGBA get_pixel(const ImageRGBA& image, int x, int y)

@@ -12,8 +12,13 @@ int run_application()
     std::cout << "Application result: " << value << '\n';
 
 	auto image = ImageRGBA_::create(1024, 1024);
+	if (!image)
+	{
+		std::cerr << "Failed to create image.\n";
+		return 1;
+	}
 	
-	/*
+	
 	ImageRGBA_::for_every_pixel_UV
 	(
 		*image,
@@ -29,8 +34,15 @@ int run_application()
 			return color;
 		}
 	);
-	*/
-	// ImageRGBA_::save_png(image, "output.png");
+	
+	for(int i = 0; i < 100; i++)
+	{
+	}
+	
+	
+	ImageRGBA_::save_png(*image, "output.png");
+
+    ImageRGBA_::free_image(image);
 
     return value == 42 ? 0 : 1;
 }
