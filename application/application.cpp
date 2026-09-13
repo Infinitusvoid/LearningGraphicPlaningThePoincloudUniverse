@@ -35,8 +35,16 @@ int run_application()
 		}
 	);
 	
+	
 	for(int i = 0; i < 100; i++)
 	{
+		RGBA color;
+		color.r = 100;
+		color.b = 120;
+		color.b = 220;
+		color.a = 255;
+		
+		ImageRGBA_::set_pixel(*image, i, i, color);
 	}
 	
 	
