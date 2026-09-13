@@ -1,5 +1,3 @@
-#from pathlib import Path
-
 import build_api
 
 
@@ -9,7 +7,7 @@ def build_project():
     # Where this project lives
     # ------------------------------------------------------------------
 
-    project_directory = build_api.get_file_directory(__file__)
+    project_directory = build_api.get_directory_containing_file(__file__)
     
     # ------------------------------------------------------------------
     # Folders that must exist
@@ -26,6 +24,10 @@ def build_project():
     compiler = build_api.Compiler(project_directory)
     compiler.compiler = "g++"
     compiler.cpp_standard = "C++20"
+
+    # Search here when a C++ source file uses: #include "..."
+    # This does not compile anything inside the directory.
+    compiler.add_include_directory("third_party/stb")
 
     compiler.add_compilation_unit(
         "application/my_lib.cpp",
@@ -60,14 +62,8 @@ def build_project():
     # .a = binary archive containing one or more .o files ( think .lib on windows)
     # .exe = final linked executable
 
-    # No — compiler.add_include_directory() does not compile everything inside that directory.
-    # “When you see an #include, also search in this folder for the header.”
-
-    # ------------------------------------------------------------------
-    # add stb header lib
-    compiler.add_include_directory("third_party/stb")
-    
-    # ------------------------------------------------------------------
+    # add_include_directory() does not compile the directory.
+    # It only adds a place where the compiler can search for included headers.
 
     # ------------------------------------------------------------------
     # Create one explicit static library file

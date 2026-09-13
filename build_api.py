@@ -61,7 +61,11 @@ class Compiler:
         self.working_directory = Path(working_directory)
         self.compiler = "g++"
         self.cpp_standard = "C++20"
+        self.include_directories: list[Path] = []
         self.compilation_units: list[tuple[Path, Path]] = []
+
+    def add_include_directory(self, directory: str | Path) -> None:
+        self.include_directories.append(Path(directory))
 
     def add_compilation_unit(
         self,
@@ -90,11 +94,18 @@ class Compiler:
                 standard,
                 "-Wall",
                 "-Wextra",
+            ]
+
+            for include_directory in self.include_directories:
+                include_path = self.working_directory / include_directory
+                command.append("-I" + str(include_path))
+
+            command.extend([
                 "-c",
                 str(source),
                 "-o",
                 str(output),
-            ]
+            ])
 
             _run(command, self.working_directory)
 
@@ -202,5 +213,5 @@ def run_program(
 
     _run([str(executable)], working_directory)
 
-def get_file_directory(file):
+def get_directory_containing_file(file: str | Path) -> Path:
     return Path(file).resolve().parent
