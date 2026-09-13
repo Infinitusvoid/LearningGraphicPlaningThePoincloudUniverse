@@ -53,7 +53,12 @@ def build_project():
         "application/tests.cpp",
         "build/tests.o",
     )
-
+    
+    #compiler.add_compilation_unit(
+    #    "application/ImageRGBA.cpp",
+    #    "build/ImageRGBA.o"
+    #)
+    
     compiler.run()
 
     # Notes
@@ -99,7 +104,6 @@ def build_project():
     application.add_static_library("build/my_lib.a")
 
     application.run()
-
 
     # ------------------------------------------------------------------
     # Link the tests
