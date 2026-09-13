@@ -3,184 +3,132 @@ from pathlib import Path
 import build_api
 
 
-def build_project() -> int:
-    # ------------------------------------------------------------
-    # Project configuration
-    # ------------------------------------------------------------
+def get_project_directory():
+    return Path(__file__).resolve().parent
 
-    project_name = "Lattice Notes"
-    project_root = Path(__file__).resolve().parent
+def build_project():
+    # ------------------------------------------------------------------
+    # Where this project lives
+    # ------------------------------------------------------------------
 
-    options = build_api.read_standard_build_options(project_name)
-    build_api.print_build_heading(
-        project_name,
-        options,
-        application_name="Application",
-        tests_name="Tests",
+    project_directory = get_project_directory()
+    
+    # ------------------------------------------------------------------
+    # Folders that must exist
+    # ------------------------------------------------------------------
+
+    build_api.create_directory_if_missing(project_directory / "application")
+    build_api.create_directory_if_missing(project_directory / "build")
+    build_api.create_directory_if_missing(project_directory / "wuwu")
+
+    # ------------------------------------------------------------------
+    # Compile every C++ source file into an explicit object file
+    # ------------------------------------------------------------------
+
+    compiler = build_api.Compiler(project_directory)
+    compiler.compiler = "g++"
+    compiler.cpp_standard = "C++20"
+
+    compiler.add_compilation_unit(
+        "application/my_lib.cpp",
+        "build/my_lib.o",
     )
 
-    project = build_api.Project(project_name, project_root)
-    project.apply_options(options)
+    compiler.add_compilation_unit(
+        "application/engine.cpp",
+        "build/engine.o",
+    )
 
-    project.cpp_standard = "C++20"
-    project.optimization = "maximum"
+    compiler.add_compilation_unit(
+        "application/application.cpp",
+        "build/application.o",
+    )
 
-    project.add_include_directory(".")
-    project.add_include_directory("p1ui")
-    project.add_include_directory("engine")
-    project.add_include_directory("src/lattice_notes")
-    project.add_include_directory("YOU_CAN_USE_TO_NOT_REINVENT_THE_WHEEL")
+    compiler.add_compilation_unit(
+        "application/main.cpp",
+        "build/main.o",
+    )
+
+    compiler.add_compilation_unit(
+        "application/tests.cpp",
+        "build/tests.o",
+    )
+
+    compiler.run()
 
 
-    # ------------------------------------------------------------
-    # Files that must already exist
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------------
+    # Create one explicit static library file
+    #
+    # Nothing is searched for.
+    # We create exactly: build/my_lib.a
+    # ------------------------------------------------------------------
 
-    project.require_file("engine/Engine.h")
-    project.require_file("engine/Engine_internal_win32_opengl.h")
-    project.require_file("engine_extensions/Engine_Extensions.h")
-    project.require_file("p1ui/P1UI.h")
-    project.require_file("src/lattice_notes/LatticeNotesApp.h")
-    project.require_file("src/lattice_notes/LatticeNotesTextInput.h")
-    project.require_file("src/lattice_notes/LatticeNotesModel.h")
-    project.require_file("src/lattice_notes/dev_review/DevReview.h")
-    project.require_file("src/lattice_notes/dev_review/DevReviewUI.h")
-    project.require_file("YOU_CAN_USE_TO_NOT_REINVENT_THE_WHEEL/stb/image/stb_image.h")
-    project.require_file("YOU_CAN_USE_TO_NOT_REINVENT_THE_WHEEL/stb/image/stb_image_write.h")
-    project.require_file("YOU_CAN_USE_TO_NOT_REINVENT_THE_WHEEL/nlohmann/json.h")
-    project.require_file("tests/engine_manifest.sha256")
+    my_lib = build_api.StaticLibrary(project_directory)
+    my_lib.archiver = "ar"
+    my_lib.output_file = "build/my_lib.a"
 
-    project.add_python_validation(
-        "tests/validate_lattice_contracts.py",
-        "Lattice Notes source contracts",
+    my_lib.add_object_file("build/my_lib.o")
+
+    my_lib.run()
+
+
+    # ------------------------------------------------------------------
+    # Link the application
+    #
+    # The static library is given by its exact file path.
+    # There is no hidden "find a library named my_lib" behavior.
+    # ------------------------------------------------------------------
+
+    application = build_api.Linker(project_directory)
+    application.linker = "g++"
+    application.output_file = "build/application.exe"
+
+    application.add_object_file("build/engine.o")
+    application.add_object_file("build/application.o")
+    application.add_object_file("build/main.o")
+
+    application.add_static_library("build/my_lib.a")
+
+    application.run()
+
+
+    # ------------------------------------------------------------------
+    # Link the tests
+    # ------------------------------------------------------------------
+
+    tests = build_api.Linker(project_directory)
+    tests.linker = "g++"
+    tests.output_file = "build/tests.exe"
+
+    tests.add_object_file("build/engine.o")
+    tests.add_object_file("build/application.o")
+    tests.add_object_file("build/tests.o")
+
+    tests.add_static_library("build/my_lib.a")
+
+    tests.run()
+
+
+    # ------------------------------------------------------------------
+    # Run the tests
+    # ------------------------------------------------------------------
+
+    build_api.run_program(
+        project_directory,
+        "build/tests.exe",
     )
 
 
-    # ------------------------------------------------------------
-    # Prepare the build
-    # ------------------------------------------------------------
-
-    # build_api creates build/, object directories, dependency files,
-    # logs, libraries, and executable output directories as needed.
-    # A clean build is only performed when --clean is explicitly requested.
-    if options.clean:
-        project.clean()
-
-    project.validate()
-
-
-    # ------------------------------------------------------------
-    # Build and run tests when --test is requested
-    # ------------------------------------------------------------
-
-    if options.build_tests:
-        core_tests = project.executable(
-            "LatticeNotes_Tests",
-            output_directory="build/tests",
-        )
-        core_tests.optimization = "none"
-
-        core_tests.add_compilation_unit("src/lattice_notes/LatticeNotesPersistence.cpp")
-        core_tests.add_compilation_unit("src/lattice_notes/LatticeNotesPanelBaker.cpp")
-        core_tests.add_compilation_unit("src/lattice_notes/dev_review/DevReview.cpp")
-        core_tests.add_compilation_unit("tests/LatticeNotes_Tests.cpp")
-
-        ui_tests = project.executable(
-            "LatticeNotes_UI_Tests",
-            output_directory="build/tests",
-        )
-        ui_tests.optimization = "none"
-
-        ui_tests.add_compilation_unit("p1ui/P1UI.cpp")
-        ui_tests.add_compilation_unit("p1ui/P1UI_State.cpp")
-        ui_tests.add_compilation_unit("p1ui/P1UI_Composition.cpp")
-        ui_tests.add_compilation_unit("p1ui/P1UI_DataEditing.cpp")
-        ui_tests.add_compilation_unit("p1ui/P1UI_AppFoundation.cpp")
-        ui_tests.add_compilation_unit("p1ui/P1UI_Production.cpp")
-
-        ui_tests.add_compilation_unit("src/lattice_notes/LatticeNotesUI.cpp")
-        ui_tests.add_compilation_unit("src/lattice_notes/LatticeNotesPersistence.cpp")
-        ui_tests.add_compilation_unit("src/lattice_notes/LatticeNotesPanelBaker.cpp")
-        ui_tests.add_compilation_unit("src/lattice_notes/dev_review/DevReview.cpp")
-        ui_tests.add_compilation_unit("src/lattice_notes/dev_review/DevReviewUI.cpp")
-        ui_tests.add_compilation_unit("tests/LatticeNotes_UI_Tests.cpp")
-
-        core_tests.build()
-        ui_tests.build()
-
-        if options.run_after_build:
-            core_tests.run(timeout_seconds=90)
-            ui_tests.run(timeout_seconds=120)
-
-        print("LATTICE NOTES TEST BUILD: PASS")
-        return 0
-
-
-    # ------------------------------------------------------------
-    # Build P1UI static library
-    # ------------------------------------------------------------
-
-    p1ui = project.static_library("P1UI")
-    p1ui.link_time_optimization = True
-
-    p1ui.add_compilation_unit("p1ui/P1UI.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_Renderer.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_Media.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_State.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_Composition.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_DataEditing.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_AppFoundation.cpp")
-    p1ui.add_compilation_unit("p1ui/P1UI_Production.cpp")
-
-
-    # ------------------------------------------------------------
-    # Build Lattice Notes application
-    # ------------------------------------------------------------
-
-    app = project.executable("LatticeNotes")
-    app.windows_only = True
-    app.link_time_optimization = True
-    app.static_runtime = True
-    app.console_application = True
-
-    app.add_compilation_unit("engine/Engine.cpp")
-    app.add_compilation_unit("engine_extensions/Engine_Extensions_win32.cpp")
-    app.add_compilation_unit("engine_extensions/FontRasterizer_win32.cpp")
-
-    app.add_compilation_unit("src/lattice_notes/LatticeNotesPersistence.cpp")
-    app.add_compilation_unit("src/lattice_notes/LatticeNotesPanelBaker.cpp")
-    app.add_compilation_unit("src/lattice_notes/LatticeNotesRenderer.cpp")
-    app.add_compilation_unit("src/lattice_notes/LatticeNotesAudio.cpp")
-    app.add_compilation_unit("src/lattice_notes/LatticeNotesUI.cpp")
-    app.add_compilation_unit("src/lattice_notes/dev_review/DevReview.cpp")
-    app.add_compilation_unit("src/lattice_notes/dev_review/DevReviewUI.cpp")
-    app.add_compilation_unit("src/lattice_notes/LatticeNotesApp.cpp")
-    app.add_compilation_unit("src/lattice_notes/main.cpp")
-
-    app.add_static_library(p1ui)
-
-    app.add_library("opengl32")
-    app.add_library("gdi32")
-    app.add_library("user32")
-    app.add_library("shell32")
-    app.add_library("comdlg32")
-    app.add_library("winmm")
-    app.add_library("ole32")
-
-    executable = app.build()
-    print(f"Built {project_name}: {executable.relative_to(project_root)}")
-
-
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------------
     # Run the application
-    # ------------------------------------------------------------
+    # ------------------------------------------------------------------
 
-    if options.run_after_build:
-        app.run(wait=False)
-
-    print("LATTICE NOTES BUILD: PASS")
-    return 0
+    build_api.run_program(
+        project_directory,
+        "build/application.exe",
+    )
 
 
 if __name__ == "__main__":
-    raise SystemExit(build_project())
+    build_project()

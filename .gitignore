@@ -1,0 +1,18 @@
+# Generated build output
+/build/
+
+# Python cache created by the build scripts
+__pycache__/
+*.pyc
+
+# Visual Studio local state
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+desktop.ini
