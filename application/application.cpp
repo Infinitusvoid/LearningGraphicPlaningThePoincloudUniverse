@@ -721,7 +721,6 @@ int run_application()
 {
 	// Sketch::run_sketch_0000();
 
-	Sketch::run_sketch_0001_visualization_edge_function_edge_AB();
 	Sketch::run_sketch_0002_visualization_edge_function_edge_BC();
 	Sketch::run_sketch_0003_visualization_edge_function_edge_CA();
 
@@ -730,7 +729,17 @@ int run_application()
 	Sketch::run_sketch_0006_visualization_edge_function_edge_BA();
 
 	
+	// The magnitude of the edge function 
+	// use as well sin(value) trick to show the change 
 
+	// Than there is realization that this edge function splits 2d plane on two half 
+	// There is for sure equivalent in 3d that for plane splits the 3d space and than generalization into any dimension basically 
+
+	// The realization when you will be able to render many 3d frames you will be able to train gaussian splat
+	// Well yea and you will know how to render spherical panorama and as well cubemap as well
+
+	// The book Mathemattics for computer graphic may go well along 
+	// Find any sources but play and make nice images 
 
 	return 0;
 }
