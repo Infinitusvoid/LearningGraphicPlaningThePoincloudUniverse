@@ -707,6 +707,110 @@ namespace Sketch
 
 		return 0;
 	}
+
+	int run_sketch_0007_visualization_edge_function_edge_Magnitude_with_sin_functions()
+	{
+		std::cout << "\n";
+		std::cout << "----------------------- \n";
+
+		std::cout << "run_sketch_0007_visualization_edge_function_edge_Magnitude_with_sin_functions\n";
+		std::cout << "----------------------- \n";
+		// we define the triangle
+
+		struct Point
+		{
+			int x;
+			int y;
+		};
+
+		const int image_size = 1024;
+
+		Point a((image_size / 10) * 1, (image_size / 10) * 9);
+		Point b((image_size / 10) * 4, (image_size / 10) * 2);
+		Point c((image_size / 10) * 9, (image_size / 10) * 9);
+
+		ImageRGBA* image = ImageRGBA_::create(image_size, image_size);
+
+		RGBA color;
+		color.r = 0;
+		color.g = 200;
+		color.b = 200;
+		color.a = 255;
+
+		auto draw_edge_from_to = [&](ImageRGBA& img, Point start, Point end)
+			{
+				int width = ImageRGBA_::get_width(img);
+				int height = ImageRGBA_::get_height(img);
+
+				for (int y = 0; y < height; y++)
+				{
+					for (int x = 0; x < width; x++)
+					{
+						float value = Math::edge_function(float(start.x), float(start.y), float(end.x), float(end.y), float(x), float(y));
+
+						if (value > 0)
+						{
+							ImageRGBA_::set_pixel(img, x, y, RGBA(0, 100, 100, 255));
+						}
+						else
+						{
+							ImageRGBA_::set_pixel(img, x, y, RGBA(0, 0, 0, 255));
+						}
+					}
+				}
+			};
+
+		auto draw_magnitude_sin_way = [&](ImageRGBA& img, Point start, Point end)
+			{
+				int width = ImageRGBA_::get_width(img);
+				int height = ImageRGBA_::get_height(img);
+
+				for (int y = 0; y < height; y++)
+				{
+					for (int x = 0; x < width; x++)
+					{
+						float value = Math::edge_function(float(start.x), float(start.y), float(end.x), float(end.y), float(x), float(y));
+
+						RGBA color = ImageRGBA_::get_pixel(img, x, y);
+
+
+						if (abs(std::sinf(value * 0.2)) < 0.2)
+						{
+							color.b = 255;
+						}
+
+
+
+
+						ImageRGBA_::set_pixel(img, x, y, RGBA(color.r, color.g, color.b, 255));
+
+					}
+				}
+			};
+
+		// Image B_A
+		{
+			ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+			draw_edge_from_to(*image, b, a);
+			draw_magnitude_sin_way(*image, b, a);
+			Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+			ImageRGBA_::save_png(*image, "run_sketch_0007_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+		}
+
+		{
+			
+
+			
+		}
+
+		
+
+		
+
+		ImageRGBA_::free_image(image);
+
+		return 0;
+	}
 }
 
 
@@ -721,13 +825,14 @@ int run_application()
 {
 	// Sketch::run_sketch_0000();
 
-	Sketch::run_sketch_0002_visualization_edge_function_edge_BC();
-	Sketch::run_sketch_0003_visualization_edge_function_edge_CA();
+	// Sketch::run_sketch_0002_visualization_edge_function_edge_BC();
+	// Sketch::run_sketch_0003_visualization_edge_function_edge_CA();
 
-	Sketch::run_sketch_0004_visualization_edge_function_edge_AC();
-	Sketch::run_sketch_0005_visualization_edge_function_edge_CB();
-	Sketch::run_sketch_0006_visualization_edge_function_edge_BA();
+	// Sketch::run_sketch_0004_visualization_edge_function_edge_AC();
+	// Sketch::run_sketch_0005_visualization_edge_function_edge_CB();
+	// Sketch::run_sketch_0006_visualization_edge_function_edge_BA();
 
+	Sketch::run_sketch_0007_visualization_edge_function_edge_Magnitude_with_sin_functions();
 	
 	// The magnitude of the edge function 
 	// use as well sin(value) trick to show the change 
