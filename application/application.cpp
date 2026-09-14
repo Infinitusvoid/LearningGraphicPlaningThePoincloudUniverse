@@ -347,7 +347,7 @@ namespace Sketch
 		std::cout << "\n";
 		std::cout << "----------------------- \n";
 
-		std::cout << "run_sketch_0001_visualization_edge_function\n";
+		std::cout << "run_sketch_0001_visualization_edge_function_edge_AB\n";
 		std::cout << "----------------------- \n";
 		// we define the triangle
 
@@ -396,7 +396,7 @@ namespace Sketch
 
 		Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
 
-		ImageRGBA_::save_png(*image, "run_sketch_0001_visualization_edge_function_edge_AB.png");
+		ImageRGBA_::save_png(*image, "run_sketch_0001_0_visualization_edge_function_edge_AB.png");
 
 		ImageRGBA_::free_image(image);
 
@@ -408,7 +408,7 @@ namespace Sketch
 		std::cout << "\n";
 		std::cout << "----------------------- \n";
 
-		std::cout << "run_sketch_0001_visualization_edge_function\n";
+		std::cout << "run_sketch_0002_visualization_edge_function_edge_BC\n";
 		std::cout << "----------------------- \n";
 		// we define the triangle
 
@@ -457,7 +457,7 @@ namespace Sketch
 
 		Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
 
-		ImageRGBA_::save_png(*image, "run_sketch_0002_visualization_edge_function_edge_BC.png");
+		ImageRGBA_::save_png(*image, "run_sketch_0002_0_visualization_edge_function_edge_BC.png");
 
 		ImageRGBA_::free_image(image);
 
@@ -469,7 +469,7 @@ namespace Sketch
 		std::cout << "\n";
 		std::cout << "----------------------- \n";
 
-		std::cout << "run_sketch_0001_visualization_edge_function\n";
+		std::cout << "run_sketch_0003_visualization_edge_function_edge_CA\n";
 		std::cout << "----------------------- \n";
 		// we define the triangle
 
@@ -518,7 +518,7 @@ namespace Sketch
 
 		Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
 
-		ImageRGBA_::save_png(*image, "run_sketch_0003_visualization_edge_function_edge_CA.png");
+		ImageRGBA_::save_png(*image, "run_sketch_0003_0_visualization_edge_function_edge_CA.png");
 
 		ImageRGBA_::free_image(image);
 
@@ -530,7 +530,7 @@ namespace Sketch
 		std::cout << "\n";
 		std::cout << "----------------------- \n";
 
-		std::cout << "run_sketch_0001_visualization_edge_function\n";
+		std::cout << "run_sketch_0004_0_visualization_edge_function_edge_AC\n";
 		std::cout << "----------------------- \n";
 		// we define the triangle
 
@@ -579,7 +579,7 @@ namespace Sketch
 
 		Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
 
-		ImageRGBA_::save_png(*image, "run_sketch_0004_visualization_edge_function_edge_AC.png");
+		ImageRGBA_::save_png(*image, "run_sketch_0004_0_visualization_edge_function_edge_AC.png");
 
 		ImageRGBA_::free_image(image);
 
@@ -591,7 +591,7 @@ namespace Sketch
 		std::cout << "\n";
 		std::cout << "----------------------- \n";
 
-		std::cout << "run_sketch_0001_visualization_edge_function\n";
+		std::cout << "run_sketch_0005_0_visualization_edge_function_edge_CB\n";
 		std::cout << "----------------------- \n";
 		// we define the triangle
 
@@ -640,7 +640,7 @@ namespace Sketch
 
 		Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
 
-		ImageRGBA_::save_png(*image, "run_sketch_0005_visualization_edge_function_edge_CB.png");
+		ImageRGBA_::save_png(*image, "run_sketch_0005_0_visualization_edge_function_edge_CB.png");
 
 		ImageRGBA_::free_image(image);
 
@@ -652,7 +652,7 @@ namespace Sketch
 		std::cout << "\n";
 		std::cout << "----------------------- \n";
 
-		std::cout << "run_sketch_0001_visualization_edge_function\n";
+		std::cout << "run_sketch_0006_0_visualization_edge_function_edge_BA\n";
 		std::cout << "----------------------- \n";
 		// we define the triangle
 
@@ -701,7 +701,7 @@ namespace Sketch
 
 		Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
 
-		ImageRGBA_::save_png(*image, "run_sketch_0006_visualization_edge_function_edge_BA.png");
+		ImageRGBA_::save_png(*image, "run_sketch_0006_0_visualization_edge_function_edge_BA.png");
 
 		ImageRGBA_::free_image(image);
 
@@ -719,7 +719,8 @@ namespace Sketch
 
 int run_application()
 {
-	// return Sketch::run_sketch_0000();
+	// Sketch::run_sketch_0000();
+
 	Sketch::run_sketch_0001_visualization_edge_function_edge_AB();
 	Sketch::run_sketch_0002_visualization_edge_function_edge_BC();
 	Sketch::run_sketch_0003_visualization_edge_function_edge_CA();
@@ -727,6 +728,8 @@ int run_application()
 	Sketch::run_sketch_0004_visualization_edge_function_edge_AC();
 	Sketch::run_sketch_0005_visualization_edge_function_edge_CB();
 	Sketch::run_sketch_0006_visualization_edge_function_edge_BA();
+
+	
 
 
 	return 0;
