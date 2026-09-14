@@ -788,20 +788,88 @@ namespace Sketch
 				}
 			};
 
-		// Image B_A
+
 		{
-			ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
-			draw_edge_from_to(*image, b, a);
-			draw_magnitude_sin_way(*image, b, a);
-			Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
-			ImageRGBA_::save_png(*image, "run_sketch_0007_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			Point w_a = a;
+			Point w_b = b;
+
+			Point w_c = c;
+
+			// AB
+			{
+				ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+				draw_edge_from_to(*image, w_a, w_b);
+				draw_magnitude_sin_way(*image, w_a, w_b);
+				Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+				ImageRGBA_::save_png(*image, "run_sketch_0007_0_AB_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			}
+
+			// BA
+			{
+				ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+				draw_edge_from_to(*image, w_b, w_a);
+				draw_magnitude_sin_way(*image, w_b, w_a);
+
+				Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+				ImageRGBA_::save_png(*image, "run_sketch_0007_1_BA_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			}
 		}
 
 		{
-			
+			Point w_a = b;
+			Point w_b = c;
+
+			Point w_c = a;
 
 			
+			{
+				ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+				draw_edge_from_to(*image, w_a, w_b);
+				draw_magnitude_sin_way(*image, w_a, w_b);
+				Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+				ImageRGBA_::save_png(*image, "run_sketch_0007_2_AB_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			}
+
+			
+			{
+				ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+				draw_edge_from_to(*image, w_b, w_a);
+				draw_magnitude_sin_way(*image, w_b, w_a);
+
+				Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+				ImageRGBA_::save_png(*image, "run_sketch_0007_3_BA_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			}
 		}
+
+		{
+			Point w_a = c;
+			Point w_b = a;
+
+			Point w_c = b;
+
+
+			{
+				ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+				draw_edge_from_to(*image, w_a, w_b);
+				draw_magnitude_sin_way(*image, w_a, w_b);
+				Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+				ImageRGBA_::save_png(*image, "run_sketch_0007_4_AB_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			}
+
+
+			{
+				ImageRGBA_::clear_with_color(*image, RGBA(0, 0, 0, 255));
+				draw_edge_from_to(*image, w_b, w_a);
+				draw_magnitude_sin_way(*image, w_b, w_a);
+
+				Raster::draw_triangle_wireframe(*image, a.x, a.y, b.x, b.y, c.x, c.y, color);
+				ImageRGBA_::save_png(*image, "run_sketch_0007_5_BA_visualization_edge_function_edge_Magnitude_with_sin_functions.png");
+			}
+		}
+
+		
+
+		
 
 		
 
