@@ -5,30 +5,11 @@
 #include <cmath>
 #include <cassert>
 
-
-#include "ImageRGBA.h"
 #include "raster.h"
-
-namespace Math
-{
-	float edge_function(
-		float ax, float ay,
-		float bx, float by,
-		float px, float py)
-	{
-		float ab_x = bx - ax;
-		float ab_y = by - ay;
-
-		float ap_x = px - ax;
-		float ap_y = py - ay;
-
-		return ab_x * ap_y - ab_y * ap_x;
-	}
-}
 
 namespace Sketch
 {
-	using namespace Math;
+	using namespace Math_;
 	using namespace Raster_;
 
 	int run_sketch_0000()
@@ -145,7 +126,7 @@ namespace Sketch
 			{
 				for (int x = 0; x < width; x++)
 				{
-					float value = Math::edge_function(float(a.x), float(a.y), float(b.x), float(b.y), float(x), float(y));
+					float value = Math_::edge_function(float(a.x), float(a.y), float(b.x), float(b.y), float(x), float(y));
 
 					if (value > 0)
 					{
@@ -206,7 +187,7 @@ namespace Sketch
 			{
 				for (int x = 0; x < width; x++)
 				{
-					float value = Math::edge_function(float(b.x), float(b.y), float(c.x), float(c.y), float(x), float(y));
+					float value = Math_::edge_function(float(b.x), float(b.y), float(c.x), float(c.y), float(x), float(y));
 
 					if (value > 0)
 					{
@@ -267,7 +248,7 @@ namespace Sketch
 			{
 				for (int x = 0; x < width; x++)
 				{
-					float value = Math::edge_function(float(c.x), float(c.y), float(a.x), float(a.y), float(x), float(y));
+					float value = Math_::edge_function(float(c.x), float(c.y), float(a.x), float(a.y), float(x), float(y));
 
 					if (value > 0)
 					{
@@ -328,7 +309,7 @@ namespace Sketch
 			{
 				for (int x = 0; x < width; x++)
 				{
-					float value = Math::edge_function(float(a.x), float(a.y), float(c.x), float(c.y), float(x), float(y));
+					float value = Math_::edge_function(float(a.x), float(a.y), float(c.x), float(c.y), float(x), float(y));
 
 					if (value > 0)
 					{
@@ -389,7 +370,7 @@ namespace Sketch
 			{
 				for (int x = 0; x < width; x++)
 				{
-					float value = Math::edge_function(float(c.x), float(c.y), float(b.x), float(b.y), float(x), float(y));
+					float value = Math_::edge_function(float(c.x), float(c.y), float(b.x), float(b.y), float(x), float(y));
 
 					if (value > 0)
 					{
@@ -450,7 +431,7 @@ namespace Sketch
 			{
 				for (int x = 0; x < width; x++)
 				{
-					float value = Math::edge_function(float(b.x), float(b.y), float(a.x), float(a.y), float(x), float(y));
+					float value = Math_::edge_function(float(b.x), float(b.y), float(a.x), float(a.y), float(x), float(y));
 
 					if (value > 0)
 					{
@@ -511,7 +492,7 @@ namespace Sketch
 				{
 					for (int x = 0; x < width; x++)
 					{
-						float value = Math::edge_function(float(start.x), float(start.y), float(end.x), float(end.y), float(x), float(y));
+						float value = Math_::edge_function(float(start.x), float(start.y), float(end.x), float(end.y), float(x), float(y));
 
 						if (value > 0)
 						{
@@ -534,7 +515,7 @@ namespace Sketch
 				{
 					for (int x = 0; x < width; x++)
 					{
-						float value = Math::edge_function(float(start.x), float(start.y), float(end.x), float(end.y), float(x), float(y));
+						float value = Math_::edge_function(float(start.x), float(start.y), float(end.x), float(end.y), float(x), float(y));
 
 						RGBA color = ImageRGBA_::get_pixel(img, x, y);
 

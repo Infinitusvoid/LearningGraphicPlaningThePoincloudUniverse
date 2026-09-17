@@ -1,4 +1,5 @@
 #include "ImageRGBA.h"
+#include "Math.h"
 
 namespace Raster_
 {
