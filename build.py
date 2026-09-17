@@ -14,9 +14,11 @@ def build_project():
     # ------------------------------------------------------------------
 
     build_api.create_directory_if_missing(project_directory / "application")
+    build_api.create_directory_if_missing(project_directory / "application" / "sketches")
     build_api.create_directory_if_missing(project_directory / "build")
     build_api.create_directory_if_missing(project_directory / "third_party")
-
+    
+    
     # ------------------------------------------------------------------
     # Compile every C++ source file into an explicit object file
     # ------------------------------------------------------------------
