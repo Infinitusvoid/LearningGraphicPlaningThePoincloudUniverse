@@ -59,6 +59,11 @@ def build_project():
         "build/ImageRGBA.o",
     )
     
+    compiler.add_compilation_unit(
+        "application/FfmpegWriter.cpp",
+        "build/FfmpegWriter.o"
+    )
+    
     compiler.run()
 
     # Notes
@@ -101,6 +106,7 @@ def build_project():
     application.add_object_file("build/application.o")
     application.add_object_file("build/main.o")
     application.add_object_file("build/ImageRGBA.o")
+    application.add_object_file("build/FfmpegWriter.o")
 
     application.add_static_library("build/my_lib.a")
 
