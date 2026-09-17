@@ -71,6 +71,11 @@ def build_project():
         "build/raster.o"
     )
     
+    compiler.add_compilation_unit(
+        "application/math.cpp",
+        "build/math.o",
+    )
+    
     compiler.run()
 
     # Notes
@@ -115,6 +120,7 @@ def build_project():
     application.add_object_file("build/ImageRGBA.o")
     application.add_object_file("build/FfmpegWriter.o")
     application.add_object_file("build/raster.o")
+    application.add_object_file("build/math.o")
 
     application.add_static_library("build/my_lib.a")
 
